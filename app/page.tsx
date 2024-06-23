@@ -1,5 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import Headline from "@/components/Headline";
 import Description from "@/components/Description";
 import Err from "@/components/Error";
@@ -43,20 +45,25 @@ const Home = () => {
     if (data.type === "error") {
       setError(data.message);
       setStatus("Error");
+      toast.error(data.message);
     } else if (data.type === "found") {
       setResult({ address: data.address, privateKey: data.privKey });
       setStatus("Address found");
+      toast.success("Address found!");
     } else if (data.type === "balance") {
       console.log(data.message);
+      toast.info(data.message);
     }
     if (data.error) {
       stopGen();
       setError(data.error);
       setStatus("Error");
+      toast.error(data.error);
     }
     if (data.address) {
       stopGen();
       displayResult(data);
+      toast.success("Address found!");
     }
   };
 
@@ -66,12 +73,14 @@ const Home = () => {
       setRunning(true);
       setStatus("Running");
       setFirstTick(performance.now());
+      toast.info("Generation started...");
 
       workers.forEach((worker) => {
         worker.postMessage(input);
       });
     } else {
       setError("workers_unsupported");
+      toast.error("Web Workers are not supported in your environment.");
     }
   };
 
@@ -81,6 +90,7 @@ const Home = () => {
     workers.forEach((worker) => worker.terminate());
     setWorkers([]);
     initWorkers();
+    toast.info("Generation stopped.");
   };
 
   const clearResult = () => {
@@ -104,14 +114,13 @@ const Home = () => {
     const newWorkers = [...workers];
     for (let w = workers.length; w < threads; w++) {
       try {
-        const worker = new Worker(
-          new URL("../js/vanity.js", import.meta.url)
-        );
+        const worker = new Worker(new URL("../js/vanity.js", import.meta.url));
         worker.onmessage = (event) => handleWorkerMessage(event.data);
         newWorkers.push(worker);
       } catch (err) {
         setError(err.message);
         setStatus("Error");
+        toast.error(err.message);
         console.error(err);
         break;
       }
@@ -132,8 +141,12 @@ const Home = () => {
   const checkLocation = () => {
     try {
       setError(window.self !== window.top ? "insecure_location" : error);
+      if (window.self !== window.top) {
+        toast.error("Insecure location: Running in an iframe.");
+      }
     } catch {
       setError("insecure_location");
+      toast.error("Insecure location: Error checking top window.");
     }
     const hostname = window.location.hostname;
     if (
@@ -141,6 +154,7 @@ const Home = () => {
       !["localhost", "127.0.0.1", "vanity-eth.tk"].includes(hostname)
     ) {
       setError("insecure_location");
+      toast.error("Insecure location: Untrusted hostname.");
     }
   };
 
@@ -150,6 +164,7 @@ const Home = () => {
 
   return (
     <div id="app" className="remodal-bg render">
+      <ToastContainer />
       <div className="container" id="content">
         <Headline />
         <div className="row">
