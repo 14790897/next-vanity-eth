@@ -8,8 +8,7 @@ import Err from "@/components/Error";
 import UserInput from "@/components/Input";
 import Statistics from "@/components/Statistics";
 import Result from "@/components/Result";
-import Save from "@/components/Save";
-import Corner from "@/components/Corner";
+// import Corner from "@/components/Corner";
 import Foot from "@/components/Footer";
 
 const Home = () => {
@@ -45,8 +44,8 @@ const Home = () => {
   const handleWorkerMessage = (data: any) => {
     if (data.type === "balanceFound") {
       setResult({ address: data.address, privateKey: data.privKey });
-      setStatus("Address found");
-      toast.success("Address found!");
+      setStatus("balance found");
+      toast.success("balance found!");
     } else if (data.type === "balance") {
       console.log(data.message);
     } else if (data.type === "addressFound") {
@@ -66,14 +65,32 @@ const Home = () => {
 
   const startGen = () => {
     if (typeof window !== "undefined" && window.Worker) {
-      console.log("wokers length in start gen", workers.length);
       clearResult();
       setRunning(true);
       setStatus("Running");
       setFirstTick(performance.now());
       toast.info("Generation started...");
 
-      workers.forEach((worker) => {
+      // Initialize workers afresh
+      const newWorkers = [];
+      for (let w = 0; w < threads; w++) {
+        try {
+          const worker = new Worker(
+            new URL("../js/vanity.js", import.meta.url)
+          );
+          worker.onmessage = (event) => handleWorkerMessage(event.data);
+          newWorkers.push(worker);
+        } catch (err) {
+          setError(err.message);
+          setStatus("Error");
+          toast.error(err.message);
+          console.error(err);
+          break;
+        }
+      }
+      setWorkers(newWorkers);
+
+      newWorkers.forEach((worker) => {
         worker.postMessage({ ...input });
       });
     } else {
@@ -85,11 +102,12 @@ const Home = () => {
   const stopGen = () => {
     setRunning(false);
     setStatus("Stopped");
+    console.log('workers:',workers.length)
     workers.forEach((worker) => worker.terminate());
     setWorkers([]);
+    initWorkers()
     toast.info("Generation stopped.");
-    initWorkers();
-    console.log("wokers length", workers.length);
+    // 有个bug，无法正常停止
   };
 
   const clearResult = () => {
@@ -107,7 +125,7 @@ const Home = () => {
 
     // Terminate extra workers if thread count is reduced
     if (workers.length > threads) {
-      // workers.slice(threads).forEach((worker) => worker.terminate());
+      workers.slice(threads).forEach((worker) => worker.terminate());
       setWorkers(workers.slice(0, threads));
       return;
     }
@@ -208,12 +226,9 @@ const Home = () => {
           </div>
         </div>
       </div>
-      <Save
-        address={result.address.toLowerCase()}
-        privateKey={result.privateKey}
-      />
+
       <Foot />
-      <Corner />
+      {/* <Corner /> */}
     </div>
   );
 };

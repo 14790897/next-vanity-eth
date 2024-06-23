@@ -41,7 +41,7 @@ export const checkBalance = async (address) => {
   }
 };
 
-const step = 500;
+const step = 50;
 
 export const privateToAddress = (privateKey) => {
   const pub = secp256k1.publicKeyCreate(privateKey, false).slice(1);

@@ -1,6 +1,13 @@
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import TextField from "@mui/material/TextField";
+import Checkbox from "@mui/material/Checkbox";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
 
 const isValidHex = (hex: string) => {
   return hex.length ? /^[0-9A-F]+$/i.test(hex) : true;
@@ -77,122 +84,112 @@ const UserInput = ({
   };
 
   return (
-    <div className="panel" id="input-panel">
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          handleStart();
-        }}
-      >
-        <div className="flex flex-wrap mb-4">
-          <div className="w-full sm:w-1/2 lg:w-1/2 px-2 mb-4 sm:mb-0">
-            <input
-              className={`text-input-large w-full ${
-                prefixError ? "border-red-500" : ""
-              }`}
-              type="text"
-              placeholder="Prefix"
-              value={prefix}
-              onChange={(e) => setPrefix(e.target.value)}
-              disabled={running}
-            />
-          </div>
-          <div className="w-full sm:w-1/2 lg:w-1/2 px-2">
-            <input
-              className={`text-input-large w-full ${
-                suffixError ? "border-red-500" : ""
-              }`}
-              type="text"
-              placeholder="Suffix"
-              value={suffix}
-              onChange={(e) => setSuffix(e.target.value)}
-              disabled={running}
-            />
-          </div>
-        </div>
-
-        <div className={`flex justify-center ${running ? "hidden" : "block"}`}>
+    <Box component="form" onSubmit={(e) => e.preventDefault()} sx={{ mt: 3 }}>
+      <Grid container spacing={2}>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            fullWidth
+            label="Prefix"
+            value={prefix}
+            onChange={(e) => setPrefix(e.target.value)}
+            disabled={running}
+            error={prefixError}
+            helperText={prefixError && "Numbers and letters from A to F only"}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            fullWidth
+            label="Suffix"
+            value={suffix}
+            onChange={(e) => setSuffix(e.target.value)}
+            disabled={running}
+            error={suffixError}
+            helperText={suffixError && "Numbers and letters from A to F only"}
+          />
+        </Grid>
+      </Grid>
+      <Box mt={2} display="flex" justifyContent="center">
+        {running && (
           <div className="spinner">
             <div></div>
             <div></div>
             <div></div>
             <div></div>
           </div>
-        </div>
-
-        <div className="example text-sm text-gray-500">
-          E.g.&nbsp;
-          {inputError ? (
-            <span className="monospace">N/A</span>
-          ) : (
-            <span className="monospace">
-              0x<b>{example?.prefix}</b>
-              {example?.random}
-              <b>{example?.suffix}</b>
-            </span>
-          )}
-        </div>
-
-        <div className="controls my-3">
-          <label className="inline-flex items-center">
-            <input
-              type="checkbox"
-              checked={checksum}
-              onChange={(e) => setChecksum(e.target.checked)}
-              disabled={running}
-            />
-            <span className="ml-2">Case-sensitive</span>
-          </label>
-        </div>
-
-        <div className="threads flex items-center my-3">
-          <button
-            type="button"
-            className="square-btn px-3 py-1 bg-gray-300 text-gray-700"
-            onClick={() => setThreads(threads - 1)}
-            disabled={running || threads <= 1}
-          >
-            -
-          </button>
-          <h4 className="mx-3">{threads}</h4>
-          <button
-            type="button"
-            className="square-btn px-3 py-1 bg-gray-300 text-gray-700"
-            onClick={() => setThreads(threads + 1)}
+        )}
+      </Box>
+      <Typography variant="body2" color="textSecondary" align="center" mt={2}>
+        E.g.&nbsp;
+        {inputError ? (
+          <span className="monospace">N/A</span>
+        ) : (
+          <span className="monospace">
+            0x<b>{example?.prefix}</b>
+            {example?.random}
+            <b>{example?.suffix}</b>
+          </span>
+        )}
+      </Typography>
+      <FormControlLabel
+        control={
+          <Checkbox
+            checked={checksum}
+            onChange={(e) => setChecksum(e.target.checked)}
             disabled={running}
+          />
+        }
+        label="Case-sensitive"
+      />
+      <Box display="flex" alignItems="center" mt={2}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => setThreads(threads - 1)}
+          disabled={running || threads <= 1}
+        >
+          -
+        </Button>
+        <Typography variant="h6" mx={2}>
+          {threads}
+        </Typography>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => setThreads(threads + 1)}
+          disabled={running}
+        >
+          +
+        </Button>
+        <Typography variant="body2" ml={2}>
+          threads {threads === cores && "(recommended)"}
+        </Typography>
+      </Box>
+      <Grid container spacing={2} mt={2}>
+        <Grid item xs={12} sm={6}>
+          <Button
+            fullWidth
+            variant="contained"
+            color="primary"
+            onClick={handleStart}
+            disabled={running || inputError || error}
           >
-            +
-          </button>
-          <span>&nbsp;threads</span>
-          {threads === cores && (
-            <span className="ml-2 text-sm text-gray-500">(recommended)</span>
-          )}
-        </div>
-
-        <div className="flex flex-wrap">
-          <div className="w-full lg:w-1/2 px-2 mb-4 lg:mb-0">
-            <button
-              type="button"
-              className="button-large w-full bg-blue-500 text-white py-2"
-              onClick={handleStart}
-              disabled={running || inputError || error}
-            >
-              Generate
-            </button>
-          </div>
-          <div className="w-full lg:w-1/2 px-2">
-            <button
-              type="button"
-              className="button-large w-full bg-red-500 text-white py-2"
-              onClick={onStop}
-              disabled={!running}
-            >
-              Stop
-            </button>
-          </div>
-        </div>
-      </form>
-    </div>
+            Generate
+          </Button>
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <Button
+            fullWidth
+            variant="contained"
+            color="secondary"
+            onClick={onStop}
+            disabled={!running}
+          >
+            Stop
+          </Button>
+        </Grid>
+      </Grid>
+    </Box>
   );
 };
 

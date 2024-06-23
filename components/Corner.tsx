@@ -1,34 +1,46 @@
-const Corner = () => {
-    return (
-        <div>
-            <a href="https://github.com" target="_blank"
-            rel="noopener noreferrer"
-            className="github-corner"
-            aria-label="View source on GitHub"
-            >
-                <svg
-                    width="80"
-                    height="80"
-                    viewBox="0 0 250 250"
-                    style={{
-                        fill: '#151513',
-                        color: '#fff',
-                        position: 'absolute',
-                        top: 0,
-                        border: 0,
-                        right: 0,
-                    }}
-                    aria-hidden="true"
-                >
-                    <path d="M0 0h250v250H0z"></path>
-                    <path
-                        d="M128 0c-35.3 0-64 28.7-64 64 0 28.3 18.4 52.2 43.8 60.6 3.2.6 4.3-1.4 4.3-3.1v-11.1c-17.9 3.9-21.7-7.7-21.7-7.7-2.9-7.5-7-9.5-7-9.5-5.7-3.9.4-3.8.4-3.8 6.3.4 9.7 6.5 9.7 6.5 5.6 9.7 14.7 6.9 18.3 5.3.6-4 2.2-6.9 4-8.5-14.3-1.6-29.4-7.2-29.4-32.1 0-7.1 2.5-13 6.6-17.6-.7-1.6-2.8-8.1.6-16.8 0 0 5.3-1.7 17.4 6.6 5-1.4 10.4-2.1 15.7-2.1 5.3 0 10.7.7 15.7 2.1 12-8.3 17.4-6.6 17.4-6.6 3.4 8.7 1.3 15.2.6 16.8 4.1 4.6 6.6 10.5 6.6 17.6 0 25-15.2 30.4-29.6 32 2.3 2 4.3 5.8 4.3 11.6v17.2c0 1.7 1.1 3.8 4.3 3.1C173.6 116.2 192 92.3 192 64c0-35.3-28.7-64-64-64z"
-                        fill="currentColor"
-                    ></path>
-                </svg>
-            </a>
-        </div>
-    );
-};
+import React from "react";
+
+const Corner = () => (
+  <a
+    href="https://github.com/bokub/vanity-eth"
+    target="_blank"
+    aria-label="View source on Github"
+    className="absolute top-0 right-0"
+  >
+    <svg
+      width="80"
+      height="80"
+      viewBox="0 0 250 250"
+      className="fill-current text-black text-opacity-90 hover:animate-octocat-wave"
+      aria-hidden="true"
+    >
+      <defs>
+        <mask id="octomask">
+          <path
+            fill="white"
+            d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"
+          />
+          <path
+            fill="black"
+            d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+            style={{ transformOrigin: "130px 106px" }}
+            className="octo-arm"
+          />
+          <path
+            d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+            fill="black"
+            className="octo-body"
+          />
+        </mask>
+      </defs>
+      <rect
+        className="fill-current text-white"
+        width="100%"
+        height="100%"
+        mask="url(#octomask)"
+      />
+    </svg>
+  </a>
+);
 
 export default Corner;
