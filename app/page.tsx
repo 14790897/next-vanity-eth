@@ -43,11 +43,7 @@ const Home = () => {
   }, [threads]);
 
   const handleWorkerMessage = (data: any) => {
-    if (data.type === "error") {
-      setError(data.message);
-      setStatus("Error");
-      toast.error(data.message);
-    } else if (data.type === "balanceFound") {
+  if (data.type === "balanceFound") {
       setResult({ address: data.address, privateKey: data.privKey });
       setStatus("Address found");
       toast.success("Address found!");
@@ -91,6 +87,8 @@ const Home = () => {
     workers.forEach((worker) => worker.terminate());
     setWorkers([]);
     toast.info("Generation stopped.");
+    initWorkers()
+    console.log("wokers length", workers.length)
   };
 
   const clearResult = () => {
