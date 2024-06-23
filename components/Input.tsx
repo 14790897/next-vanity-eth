@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const isValidHex = (hex: string) => {
   return hex.length ? /^[0-9A-F]+$/i.test(hex) : true;
@@ -52,6 +54,12 @@ const UserInput = ({
   const suffixError = !isValidHex(suffix);
   const inputError = prefixError || suffixError;
 
+  useEffect(() => {
+    if (inputError) {
+      toast.error("Numbers and letters from A to F only");
+    }
+  }, [inputError]);
+
   const example = !inputError
     ? {
         prefix: checksum ? prefix : mixCase(prefix),
@@ -76,12 +84,6 @@ const UserInput = ({
           handleStart();
         }}
       >
-        {inputError && (
-          <div className="text-red-500">
-            Numbers and letters from A to F only
-          </div>
-        )}
-
         <div className="flex flex-wrap mb-4">
           <div className="w-full sm:w-1/2 lg:w-1/2 px-2 mb-4 sm:mb-0">
             <input

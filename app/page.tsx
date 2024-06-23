@@ -52,14 +52,15 @@ const Home = () => {
       toast.success("Address found!");
     } else if (data.type === "balance") {
       console.log(data.message);
-      toast.info(data.message);
     }
+
     if (data.error) {
       stopGen();
       setError(data.error);
       setStatus("Error");
       toast.error(data.error);
     }
+
     if (data.address) {
       stopGen();
       displayResult(data);
@@ -76,7 +77,7 @@ const Home = () => {
       toast.info("Generation started...");
 
       workers.forEach((worker) => {
-        worker.postMessage(input);
+        worker.postMessage({ ...input, stopSignal: false });
       });
     } else {
       setError("workers_unsupported");
@@ -87,9 +88,8 @@ const Home = () => {
   const stopGen = () => {
     setRunning(false);
     setStatus("Stopped");
-    workers.forEach((worker) => worker.terminate());
+    workers.forEach((worker) => worker.postMessage({ stopSignal: true }));
     setWorkers([]);
-    initWorkers();
     toast.info("Generation stopped.");
   };
 

@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "humanize-duration": "^3.32.1",
     "keccak": "^3.0.4",
     "next": "14.2.4",
     "randombytes": "^2.1.0",
