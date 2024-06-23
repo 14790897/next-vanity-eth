@@ -17,7 +17,7 @@ const computeDifficulty = (
     : ret;
 };
 
-const computeProbability = (difficulty: number, attempts: number) => {
+const computeProbability = (difficulty: number, attempts: number) => { //这个是几何分布中至少成功一次的概率计算方法
   return 1 - Math.pow(1 - 1 / difficulty, attempts);
 };
 
@@ -72,7 +72,7 @@ const Statistics = ({
     ? 0
     : Math.floor(Math.log(0.5) / Math.log(1 - 1 / difficulty));
   const addresses50 =
-    probability50 === -Infinity
+    probability50 === -Infinity //这个是几何分布的概率分布函数
       ? "Nearly impossible"
       : inputError
       ? "N/A"
