@@ -9,18 +9,22 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "keccak": "^3.0.4",
+    "next": "14.2.4",
+    "randombytes": "^2.1.0",
     "react": "^18",
     "react-dom": "^18",
-    "next": "14.2.4"
+    "secp256k1": "^5.0.0"
   },
   "devDependencies": {
-    "typescript": "^5",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "eslint": "^8",
+    "eslint-config-next": "14.2.4",
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
-    "eslint": "^8",
-    "eslint-config-next": "14.2.4"
+    "typescript": "^5",
+    "worker-loader": "^3.0.8"
   }
 }
