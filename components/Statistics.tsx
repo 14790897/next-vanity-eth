@@ -17,7 +17,8 @@ const computeDifficulty = (
     : ret;
 };
 
-const computeProbability = (difficulty: number, attempts: number) => { //这个是几何分布中至少成功一次的概率计算方法
+const computeProbability = (difficulty: number, attempts: number) => {
+  //这个是几何分布中至少成功一次的概率计算方法
   return 1 - Math.pow(1 - 1 / difficulty, attempts);
 };
 
@@ -31,38 +32,34 @@ const Statistics = ({
   checksum,
   status,
   firstTick,
+  attempts,
 }: {
   prefix: string;
   suffix: string;
   checksum: boolean;
   status: string;
   firstTick: number | null;
+  attempts: number;
 }) => {
   const [count, setCount] = useState(0);
   const [speed, setSpeed] = useState(0);
 
   useEffect(() => {
-    const handleIncrement = (incr: number) => {
-      setCount((prevCount) => (incr > 0 ? prevCount + incr : 0));
-      setSpeed((prevSpeed) =>
-        incr > 0
+    if (attempts > 0) {
+      setCount(attempts);
+      setSpeed(() =>
+        attempts > 0
           ? Math.floor(
-              (1000 * (count + incr)) /
+              (1000 * attempts) /
                 (performance.now() - (firstTick || performance.now()))
             )
           : 0
       );
-    };
-
-    window.addEventListener("increment-counter", (e: any) =>
-      handleIncrement(e.detail)
-    );
-    return () => {
-      window.removeEventListener("increment-counter", (e: any) =>
-        handleIncrement(e.detail)
-      );
-    };
-  }, [count, firstTick]);
+    } else {
+      setCount(0);
+      setSpeed(0);
+    }
+  }, [attempts, firstTick]);
 
   const inputError = !isValidHex(prefix) || !isValidHex(suffix);
   const difficulty = inputError

@@ -128,29 +128,22 @@ export const getVanityWallet = async (prefix, suffix, isChecksum, cb) => {
     const privateKey = wallet.privKey;
     const balance = await checkBalance(checksumAddress);
     if (balance > 0) {
-    //   console.log(
-    //     `Found an address with balance! Address: ${checksumAddress}, Private Key: ${privateKey}, Balance: ${balance} ETH`
-    //   );
+      //   console.log(
+      //     `Found an address with balance! Address: ${checksumAddress}, Private Key: ${privateKey}, Balance: ${balance} ETH`
+      //   );
       postMessage({
-        type: "found",
+        type: "balanceFound",
         message: `Found an address with balance!`,
         address: checksumAddress,
         privKey: privateKey,
         balance,
       });
     }
-    // else {
-    // //   console.log(`Address ${checksumAddress} has no balance`);
-    //   postMessage({
-    //     type: "balance",
-    //     message: `Address ${checksumAddress} has no balance`,
-    //   });
-    // }
     attempts++;
-    // await new Promise((resolve) => setTimeout(resolve, 1000));
   }
 
   cb({
+    type: "addressFound",
     address: "0x" + toChecksumAddress(wallet.address),
     privKey: wallet.privKey,
     attempts,
@@ -164,6 +157,6 @@ onmessage = function (event) {
       postMessage(message)
     );
   } catch (err) {
-    self.postMessage({ error: err.toString() });
+    self.postMessage({ type: "error", message: err.toString() });
   }
 };

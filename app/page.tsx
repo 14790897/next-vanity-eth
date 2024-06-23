@@ -16,7 +16,7 @@ const Home = () => {
   const [running, setRunning] = useState(false);
   const [status, setStatus] = useState("Waiting");
   const [workers, setWorkers] = useState<Worker[]>([]);
-  const [threads, setThreads] = useState(4);
+  const [threads, setThreads] = useState(12);
   const [cores, setCores] = useState(0);
   const [result, setResult] = useState({ address: "", privateKey: "" });
   const [input, setInput] = useState({
@@ -26,6 +26,7 @@ const Home = () => {
   });
   const [firstTick, setFirstTick] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [attempts, setAttempts] = useState(0);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -46,25 +47,24 @@ const Home = () => {
       setError(data.message);
       setStatus("Error");
       toast.error(data.message);
-    } else if (data.type === "found") {
+    } else if (data.type === "balanceFound") {
       setResult({ address: data.address, privateKey: data.privKey });
       setStatus("Address found");
       toast.success("Address found!");
     } else if (data.type === "balance") {
       console.log(data.message);
-    }
-
-    if (data.error) {
-      stopGen();
-      setError(data.error);
-      setStatus("Error");
-      toast.error(data.error);
-    }
-
-    if (data.address) {
+    } else if (data.type === "addressFound") {
       stopGen();
       displayResult(data);
       toast.success("Address found!");
+    } else if (data.type === "error") {
+      stopGen();
+      setError(data.message);
+      setStatus("Error");
+      toast.error(data.error);
+    }
+    if (data.attempts) {
+      setAttempts((prevAttempts) => prevAttempts + data.attempts);
     }
   };
 
@@ -77,7 +77,7 @@ const Home = () => {
       toast.info("Generation started...");
 
       workers.forEach((worker) => {
-        worker.postMessage({ ...input, stopSignal: false });
+        worker.postMessage({ ...input});
       });
     } else {
       setError("workers_unsupported");
@@ -88,13 +88,14 @@ const Home = () => {
   const stopGen = () => {
     setRunning(false);
     setStatus("Stopped");
-    workers.forEach((worker) => worker.postMessage({ stopSignal: true }));
+    workers.forEach((worker) => worker.terminate());
     setWorkers([]);
     toast.info("Generation stopped.");
   };
 
   const clearResult = () => {
     setResult({ address: "", privateKey: "" });
+    setAttempts(0);
   };
 
   const displayResult = (result: any) => {
@@ -130,7 +131,7 @@ const Home = () => {
 
   const countCores = () => {
     try {
-      const coreCount = navigator.hardwareConcurrency || 4;
+      const coreCount = navigator.hardwareConcurrency || 12;
       setCores(coreCount);
       setThreads(coreCount);
     } catch (err) {
@@ -196,6 +197,7 @@ const Home = () => {
               checksum={input.checksum}
               status={status}
               firstTick={firstTick}
+              attempts={attempts}
             />
           </div>
         </div>

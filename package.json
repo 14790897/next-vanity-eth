@@ -19,6 +19,7 @@
     "secp256k1": "^5.0.0"
   },
   "devDependencies": {
+    "@types/humanize-duration": "^3.27.4",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
