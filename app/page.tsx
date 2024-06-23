@@ -43,7 +43,7 @@ const Home = () => {
   }, [threads]);
 
   const handleWorkerMessage = (data: any) => {
-  if (data.type === "balanceFound") {
+    if (data.type === "balanceFound") {
       setResult({ address: data.address, privateKey: data.privKey });
       setStatus("Address found");
       toast.success("Address found!");
@@ -66,6 +66,7 @@ const Home = () => {
 
   const startGen = () => {
     if (typeof window !== "undefined" && window.Worker) {
+      console.log("wokers length in start gen", workers.length);
       clearResult();
       setRunning(true);
       setStatus("Running");
@@ -73,7 +74,7 @@ const Home = () => {
       toast.info("Generation started...");
 
       workers.forEach((worker) => {
-        worker.postMessage({ ...input});
+        worker.postMessage({ ...input });
       });
     } else {
       setError("workers_unsupported");
@@ -87,8 +88,8 @@ const Home = () => {
     workers.forEach((worker) => worker.terminate());
     setWorkers([]);
     toast.info("Generation stopped.");
-    initWorkers()
-    console.log("wokers length", workers.length)
+    initWorkers();
+    console.log("wokers length", workers.length);
   };
 
   const clearResult = () => {
@@ -104,12 +105,14 @@ const Home = () => {
   const initWorkers = () => {
     if (workers.length === threads) return;
 
+    // Terminate extra workers if thread count is reduced
     if (workers.length > threads) {
-      workers.slice(threads).forEach((worker) => worker.terminate());
+      // workers.slice(threads).forEach((worker) => worker.terminate());
       setWorkers(workers.slice(0, threads));
       return;
     }
 
+    // Create new workers if thread count is increased
     const newWorkers = [...workers];
     for (let w = workers.length; w < threads; w++) {
       try {
