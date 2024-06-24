@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Headline from "@/components/Headline";
-import Description from "@/components/Description";
 import Err from "@/components/Error";
 import UserInput from "@/components/Input";
 import Statistics from "@/components/Statistics";
@@ -183,13 +182,12 @@ const Home = () => {
   };
 
   return (
-    <div id="app" className="remodal-bg render">
-      <Headline />
+    <div id="app" className="flex items-center justify-center min-h-screen">
       <ToastContainer />
-      <div className="container" id="content">
+      <div className="container mx-auto px-4">
         <div className="row">
           <div className="col-md-12">
-            <Description />
+            <Headline />
           </div>
         </div>
         {error && (
@@ -225,9 +223,13 @@ const Home = () => {
             <Result address={result.address} privateKey={result.privateKey} />
           </div>
         </div>
+        <div className="row">
+          <div className="col-md-12">
+            <Foot />
+          </div>
+        </div>
       </div>
-
-      <Foot />
+      {/* <Foot />  */}
       {/* <Corner /> */}
     </div>
   );

@@ -12,6 +12,7 @@
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
     "@mui/material": "^5.15.20",
+    "blockies": "^0.0.2",
     "humanize-duration": "^3.32.1",
     "keccak": "^3.0.4",
     "next": "14.2.4",
@@ -22,6 +23,7 @@
     "secp256k1": "^5.0.0"
   },
   "devDependencies": {
+    "@types/blockies": "^0.0.4",
     "@types/humanize-duration": "^3.27.4",
     "@types/node": "^20",
     "@types/react": "^18",
