@@ -28,18 +28,21 @@ const UserInput = ({
   onStart,
   onStop,
   onInputChange,
+  onThreadChange,
 }: {
   running: boolean;
   cores: number;
   onStart: () => void;
   onStop: () => void;
   onInputChange: (type: string, value: any) => void;
+  onThreadChange: (threads: number) => void;
 }) => {
   const [threads, setThreads] = useState(cores || 12);
   const [prefix, setPrefix] = useState("");
   const [suffix, setSuffix] = useState("");
   const [checksum, setChecksum] = useState(true);
   const [error, setError] = useState(false);
+  const [checkBalance, setCheckBalance] = useState(true);
 
   useEffect(() => {
     onInputChange("prefix", prefix);
@@ -54,9 +57,12 @@ const UserInput = ({
   }, [checksum]);
 
   useEffect(() => {
-    onInputChange("threads", threads);
+    onThreadChange(threads);
   }, [threads]);
 
+  useEffect(() => {
+    onInputChange("checkBalance", checkBalance);
+  }, [checkBalance]);
   const prefixError = !isValidHex(prefix);
   const suffixError = !isValidHex(suffix);
   const inputError = prefixError || suffixError;
@@ -149,6 +155,16 @@ const UserInput = ({
           />
         }
         label="Case-sensitive"
+      />
+      <FormControlLabel
+        control={
+          <Checkbox
+            checked={checkBalance}
+            onChange={(e) => setCheckBalance(e.target.checked)}
+            disabled={running}
+          />
+        }
+        label="check balance"
       />
       <Box display="flex" alignItems="center" mt={2}>
         <Button

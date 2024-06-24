@@ -22,6 +22,7 @@ const Home = () => {
     prefix: "",
     suffix: "",
     checksum: true,
+    checkBalance: true,
   });
   const [firstTick, setFirstTick] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -101,6 +102,8 @@ const Home = () => {
       newWorkers.forEach((worker) => {
         worker.postMessage({ ...input });
       });
+      console.log("input", input)
+      console.log('threads', threads)
     } else {
       setError("workers_unsupported");
       toast.error("Web Workers are not supported in your environment.");
@@ -111,6 +114,7 @@ const Home = () => {
     setRunning(false);
     setStatus("Stopped");
     console.log("workers:", workers.length);
+    workers.forEach((worker) => worker.terminate());
     workers.forEach((worker) => worker.terminate());
     setWorkers([]);
     initWorkers();
@@ -214,6 +218,7 @@ const Home = () => {
               onStart={startGen}
               onStop={stopGen}
               onInputChange={setInputValue}
+              onThreadChange={setThreads}
             />
           </div>
           <div className="col-md-6">
