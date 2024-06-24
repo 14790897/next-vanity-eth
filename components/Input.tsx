@@ -29,6 +29,7 @@ const UserInput = ({
   onStop,
   onInputChange,
   onThreadChange,
+  onApiKeyChange,
 }: {
   running: boolean;
   cores: number;
@@ -36,6 +37,7 @@ const UserInput = ({
   onStop: () => void;
   onInputChange: (type: string, value: any) => void;
   onThreadChange: (threads: number) => void;
+  onApiKeyChange: (key: string) => void;
 }) => {
   const [threads, setThreads] = useState(cores || 12);
   const [prefix, setPrefix] = useState("");
@@ -43,7 +45,7 @@ const UserInput = ({
   const [checksum, setChecksum] = useState(true);
   const [error, setError] = useState(false);
   const [checkBalance, setCheckBalance] = useState(true);
-
+  const [apiKey, setApiKey] = useState("");
   useEffect(() => {
     onInputChange("prefix", prefix);
   }, [prefix]);
@@ -63,6 +65,10 @@ const UserInput = ({
   useEffect(() => {
     onInputChange("checkBalance", checkBalance);
   }, [checkBalance]);
+
+  useEffect(() => {
+    onApiKeyChange(apiKey);
+  }, [apiKey]);
   const prefixError = !isValidHex(prefix);
   const suffixError = !isValidHex(suffix);
   const inputError = prefixError || suffixError;

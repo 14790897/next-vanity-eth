@@ -15,6 +15,7 @@ const Home = () => {
   const [status, setStatus] = useState("Waiting");
   const [workers, setWorkers] = useState<Worker[]>([]);
   const [threads, setThreads] = useState(12);
+  const [apiKey, setApiKey] = useState("");
   const [cores, setCores] = useState(0);
   const [result, setResult] = useState({ address: "", privateKey: "" });
   const [input, setInput] = useState({
@@ -88,7 +89,7 @@ const Home = () => {
           );
           worker.onmessage = (event) => handleWorkerMessage(event.data);
           newWorkers.push(worker);
-        } catch (err) {
+        } catch (err:any) {
           setError(err.message);
           setStatus("Error");
           toast.error(err.message);
@@ -113,6 +114,9 @@ const Home = () => {
     setRunning(false);
     setStatus("Stopped");
     console.log("workers:", workers.length);
+    workers.forEach((worker) => {
+      worker.postMessage({ type: "stop" });
+    });
     workers.forEach((worker) => worker.terminate());
     setWorkers([]);
     toast.info("Generation stopped.");
@@ -145,7 +149,7 @@ const Home = () => {
         const worker = new Worker(new URL("../js/vanity.js", import.meta.url));
         worker.onmessage = (event) => handleWorkerMessage(event.data);
         newWorkers.push(worker);
-      } catch (err) {
+      } catch (err:any) {
         setError(err.message);
         setStatus("Error");
         toast.error(err.message);
@@ -215,6 +219,7 @@ const Home = () => {
               onStop={stopGen}
               onInputChange={setInputValue}
               onThreadChange={setThreads}
+              onApiKeyChange={setApiKey}
             />
           </div>
           <div className="col-md-6">
@@ -243,8 +248,6 @@ const Home = () => {
           </div>
         </div>
       </div>
-      {/* <Foot />  */}
-      {/* <Corner /> */}
     </div>
   );
 };

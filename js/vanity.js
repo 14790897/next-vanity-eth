@@ -3,9 +3,9 @@ import keccak from "keccak";
 import randomBytes from "randombytes";
 
 export const checkBalance = async (address) => {
+  // const url = "api/https://eth-mainnet.g.alchemy.com/v2";
   const apiKey = "i60V-1aZ8TaC0yeV_ss4EHRNVdd1nHVD";
   const url = `https://eth-mainnet.g.alchemy.com/v2/${apiKey}`;
-
   try {
     const response = await fetch(url, {
       method: "POST",
@@ -115,7 +115,7 @@ export const getVanityWallet = async (
   prefix,
   suffix,
   isChecksum,
-  ischeckBalance,
+  ischeckBalance
 ) => {
   let wallet = getRandomWallet();
   let attempts = 1;
@@ -158,14 +158,18 @@ export const getVanityWallet = async (
 
 onmessage = function (event) {
   const input = event.data;
-  try {
-    getVanityWallet(
-      input.prefix,
-      input.suffix,
-      input.checksum,
-      input.checkBalance,
-    );
-  } catch (err) {
+  if (input.type === "stop") {
+    close(); // Close the worker
+  } else {
+    try {
+      getVanityWallet(
+        input.prefix,
+        input.suffix,
+        input.checksum,
+        input.checkBalance
+      );
+    } catch (err) {
       self.postMessage({ type: "error", message: err.toString() });
+    }
   }
 };
