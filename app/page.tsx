@@ -9,6 +9,7 @@ import Statistics from "@/components/Statistics";
 import Result from "@/components/Result";
 // import Corner from "@/components/Corner";
 import Foot from "@/components/Footer";
+const MAX_BALANCE_MESSAGES = 10;
 
 const Home = () => {
   const [running, setRunning] = useState(false);
@@ -25,7 +26,7 @@ const Home = () => {
   const [firstTick, setFirstTick] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [attempts, setAttempts] = useState(0);
-
+  const [balances, setBalances] = useState<string[]>([]);
   useEffect(() => {
     if (typeof window !== "undefined") {
       checkLocation();
@@ -44,9 +45,17 @@ const Home = () => {
     if (data.type === "balanceFound") {
       setResult({ address: data.address, privateKey: data.privKey });
       setStatus("balance found");
+      stopGen();
       toast.success("balance found!");
     } else if (data.type === "balance") {
       console.log(data.message);
+      setBalances((prevBalances) => {
+        const newBalances = [...prevBalances, data.message];
+        if (newBalances.length > MAX_BALANCE_MESSAGES) {
+          newBalances.shift(); // 删除最早的消息
+        }
+        return newBalances;
+      });
     } else if (data.type === "addressFound") {
       stopGen();
       displayResult(data);
@@ -220,7 +229,11 @@ const Home = () => {
         </div>
         <div className="row">
           <div className="col-md-12">
-            <Result address={result.address} privateKey={result.privateKey} />
+            <Result
+              address={result.address}
+              privateKey={result.privateKey}
+              balances={balances}
+            />
           </div>
         </div>
         <div className="row">
