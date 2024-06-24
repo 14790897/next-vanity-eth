@@ -64,7 +64,7 @@ const Home = () => {
       stopGen();
       setError(data.message);
       setStatus("Error");
-      toast.error(data.error);
+      toast.error(data.message);
     }
     if (data.attempts) {
       setAttempts((prevAttempts) => prevAttempts + data.attempts);

@@ -166,6 +166,6 @@ onmessage = function (event) {
       input.checkBalance,
     );
   } catch (err) {
-    self.postMessage({ type: "error", message: err.toString() });
+      self.postMessage({ type: "error", message: err.toString() });
   }
 };
