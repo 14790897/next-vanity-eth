@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import humanizeDuration from "humanize-duration";
+import { Box, Typography, LinearProgress } from "@mui/material";
 
 const isValidHex = (hex: string) => {
   return hex.length ? /^[0-9A-F]+$/i.test(hex) : true;
@@ -87,40 +88,44 @@ const Statistics = ({
     Math.round(10000 * computeProbability(difficulty, count)) / 100;
 
   return (
-    <div className="panel p-4 bg-gray-100 rounded-md shadow-md">
-      <div>
+    <Box
+      className="panel"
+      p={4}
+      bgcolor="grey.100"
+      borderRadius={2}
+      boxShadow={2}
+      justifyContent="center"
+    >
+      <Typography variant="body1">
         Difficulty:{" "}
         <span className="output">{formatNum(Number(difficulty))}</span>
-      </div>
-      <div>
+      </Typography>
+      <Typography variant="body1">
         Generated:{" "}
         <span className="output">
           {formatNum(count)}
           {count === 1 ? " address" : " addresses"}
         </span>
-      </div>
-      <div>
+      </Typography>
+      <Typography variant="body1">
         50% probability:{" "}
         <span className="output">{speed ? time50 : addresses50}</span>
-      </div>
-      <div>
+      </Typography>
+      <Typography variant="body1">
         Speed: <span className="output">{speed} addr/s</span>
-      </div>
-      <div>
+      </Typography>
+      <Typography variant="body1">
         Status: <span className="output">{status}</span>
-      </div>
+      </Typography>
 
-      <div className="probability mt-4 bg-gray-200 h-4 relative">
-        <div
-          className="probability-bar bg-blue-500 h-full"
-          style={{ width: `${probability}%` }}
-        ></div>
-      </div>
-      <div className="percentage text-center mt-2">
-        <h4>{probability}%</h4>
-        <div>Probability</div>
-      </div>
-    </div>
+      <Box mt={4}>
+        <LinearProgress variant="determinate" value={probability} />
+      </Box>
+      <Box textAlign="center" mt={2}>
+        <Typography variant="h4">{probability}%</Typography>
+        <Typography variant="body2">Probability</Typography>
+      </Box>
+    </Box>
   );
 };
 

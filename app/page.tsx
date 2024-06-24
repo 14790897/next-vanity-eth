@@ -102,10 +102,10 @@ const Home = () => {
   const stopGen = () => {
     setRunning(false);
     setStatus("Stopped");
-    console.log('workers:',workers.length)
+    console.log("workers:", workers.length);
     workers.forEach((worker) => worker.terminate());
     setWorkers([]);
-    initWorkers()
+    initWorkers();
     toast.info("Generation stopped.");
     // 有个bug，无法正常停止
   };
@@ -184,9 +184,9 @@ const Home = () => {
 
   return (
     <div id="app" className="remodal-bg render">
+      <Headline />
       <ToastContainer />
       <div className="container" id="content">
-        <Headline />
         <div className="row">
           <div className="col-md-12">
             <Description />

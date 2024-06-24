@@ -84,8 +84,17 @@ const UserInput = ({
   };
 
   return (
-    <Box component="form" onSubmit={(e) => e.preventDefault()} sx={{ mt: 3 }}>
-      <Grid container spacing={2}>
+    <Box
+      component="form"
+      onSubmit={(e) => e.preventDefault()}
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        mt: 3,
+      }}
+    >
+      <Grid container spacing={2} justifyContent="center">
         <Grid item xs={12} sm={6}>
           <TextField
             fullWidth
@@ -109,16 +118,16 @@ const UserInput = ({
           />
         </Grid>
       </Grid>
-      <Box mt={2} display="flex" justifyContent="center">
-        {running && (
+      {running && (
+        <Box mt={2} display="flex" justifyContent="center">
           <div className="spinner">
             <div></div>
             <div></div>
             <div></div>
             <div></div>
           </div>
-        )}
-      </Box>
+        </Box>
+      )}
       <Typography variant="body2" color="textSecondary" align="center" mt={2}>
         E.g.&nbsp;
         {inputError ? (
@@ -165,7 +174,7 @@ const UserInput = ({
           threads {threads === cores && "(recommended)"}
         </Typography>
       </Box>
-      <Grid container spacing={2} mt={2}>
+      <Grid container spacing={2} mt={2} justifyContent="center">
         <Grid item xs={12} sm={6}>
           <Button
             fullWidth
