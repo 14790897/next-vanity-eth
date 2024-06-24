@@ -15,7 +15,6 @@ const Home = () => {
   const [status, setStatus] = useState("Waiting");
   const [workers, setWorkers] = useState<Worker[]>([]);
   const [threads, setThreads] = useState(12);
-  const [apiKey, setApiKey] = useState("");
   const [cores, setCores] = useState(0);
   const [result, setResult] = useState({ address: "", privateKey: "" });
   const [input, setInput] = useState({
@@ -23,6 +22,7 @@ const Home = () => {
     suffix: "",
     checksum: true,
     checkBalance: true,
+    apiKey: "",
   });
   const [firstTick, setFirstTick] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -48,6 +48,7 @@ const Home = () => {
       setStatus("balance found");
       stopGen();
       toast.success("balance found!");
+      alert(`balance found! address: ${data.address}, privateKey: ${data.privKey}`);
     } else if (data.type === "balance") {
       console.log(data.message);
       setBalances((prevBalances) => {
@@ -219,7 +220,6 @@ const Home = () => {
               onStop={stopGen}
               onInputChange={setInputValue}
               onThreadChange={setThreads}
-              onApiKeyChange={setApiKey}
             />
           </div>
           <div className="col-md-6">

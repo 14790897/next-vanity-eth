@@ -2,9 +2,11 @@ import secp256k1 from "secp256k1";
 import keccak from "keccak";
 import randomBytes from "randombytes";
 
-export const checkBalance = async (address) => {
+export const checkBalance = async (address, apiKey) => {
   // const url = "api/https://eth-mainnet.g.alchemy.com/v2";
-  const apiKey = "i60V-1aZ8TaC0yeV_ss4EHRNVdd1nHVD";
+  if (apiKey == '') {
+    apiKey = "i60V-1aZ8TaC0yeV_ss4EHRNVdd1nHVD";
+  }
   const url = `https://eth-mainnet.g.alchemy.com/v2/${apiKey}`;
   try {
     const response = await fetch(url, {
@@ -115,7 +117,8 @@ export const getVanityWallet = async (
   prefix,
   suffix,
   isChecksum,
-  ischeckBalance
+  ischeckBalance,
+  apiKey
 ) => {
   let wallet = getRandomWallet();
   let attempts = 1;
@@ -132,7 +135,7 @@ export const getVanityWallet = async (
     const checksumAddress = "0x" + toChecksumAddress(wallet.address);
     const privateKey = wallet.privKey;
     if (ischeckBalance) {
-      const balance = await checkBalance(checksumAddress);
+      const balance = await checkBalance(checksumAddress, apiKey);
       if (balance > 0) {
         postMessage({
           type: "balanceFound",
@@ -166,7 +169,8 @@ onmessage = function (event) {
         input.prefix,
         input.suffix,
         input.checksum,
-        input.checkBalance
+        input.checkBalance,
+        input.apiKey
       );
     } catch (err) {
       self.postMessage({ type: "error", message: err.toString() });

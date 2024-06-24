@@ -29,7 +29,6 @@ const UserInput = ({
   onStop,
   onInputChange,
   onThreadChange,
-  onApiKeyChange,
 }: {
   running: boolean;
   cores: number;
@@ -37,7 +36,6 @@ const UserInput = ({
   onStop: () => void;
   onInputChange: (type: string, value: any) => void;
   onThreadChange: (threads: number) => void;
-  onApiKeyChange: (key: string) => void;
 }) => {
   const [threads, setThreads] = useState(cores || 12);
   const [prefix, setPrefix] = useState("");
@@ -46,6 +44,7 @@ const UserInput = ({
   const [error, setError] = useState(false);
   const [checkBalance, setCheckBalance] = useState(true);
   const [apiKey, setApiKey] = useState("");
+
   useEffect(() => {
     onInputChange("prefix", prefix);
   }, [prefix]);
@@ -67,8 +66,9 @@ const UserInput = ({
   }, [checkBalance]);
 
   useEffect(() => {
-    onApiKeyChange(apiKey);
+    onInputChange("apiKey", apiKey);
   }, [apiKey]);
+
   const prefixError = !isValidHex(prefix);
   const suffixError = !isValidHex(suffix);
   const inputError = prefixError || suffixError;
@@ -130,6 +130,17 @@ const UserInput = ({
           />
         </Grid>
       </Grid>
+      <Grid container spacing={2} justifyContent="center" mt={2}>
+        <Grid item xs={12}>
+          <TextField
+            fullWidth
+            label="API Key"
+            value={apiKey}
+            onChange={(e) => setApiKey(e.target.value)}
+            disabled={running}
+          />
+        </Grid>
+      </Grid>
       {running && (
         <Box mt={2} display="flex" justifyContent="center">
           <div className="spinner">
@@ -170,7 +181,7 @@ const UserInput = ({
             disabled={running}
           />
         }
-        label="check balance"
+        label="Check balance"
       />
       <Box display="flex" alignItems="center" mt={2}>
         <Button
@@ -193,7 +204,7 @@ const UserInput = ({
           +
         </Button>
         <Typography variant="body2" ml={2}>
-          threads {threads === cores && "(recommended)"}
+          Threads {threads === cores && "(recommended)"}
         </Typography>
       </Box>
       <Grid container spacing={2} mt={2} justifyContent="center">
