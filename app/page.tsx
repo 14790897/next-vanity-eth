@@ -7,7 +7,6 @@ import Err from "@/components/Error";
 import UserInput from "@/components/Input";
 import Statistics from "@/components/Statistics";
 import Result from "@/components/Result";
-// import Corner from "@/components/Corner";
 import Foot from "@/components/Footer";
 const MAX_BALANCE_MESSAGES = 10;
 
@@ -102,24 +101,21 @@ const Home = () => {
       newWorkers.forEach((worker) => {
         worker.postMessage({ ...input });
       });
-      console.log("input", input)
-      console.log('threads', threads)
+      console.log("input", input);
+      console.log("threads", threads);
     } else {
       setError("workers_unsupported");
       toast.error("Web Workers are not supported in your environment.");
     }
   };
 
-  const stopGen = () => {
+  const stopGen = async () => {
     setRunning(false);
     setStatus("Stopped");
     console.log("workers:", workers.length);
     workers.forEach((worker) => worker.terminate());
-    workers.forEach((worker) => worker.terminate());
     setWorkers([]);
-    initWorkers();
     toast.info("Generation stopped.");
-    // 有个bug，无法正常停止
   };
 
   const clearResult = () => {

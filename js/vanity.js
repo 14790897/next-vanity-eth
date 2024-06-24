@@ -116,7 +116,6 @@ export const getVanityWallet = async (
   suffix,
   isChecksum,
   ischeckBalance,
-  cb
 ) => {
   let wallet = getRandomWallet();
   let attempts = 1;
@@ -126,7 +125,7 @@ export const getVanityWallet = async (
 
   while (!isValidVanityAddress(wallet.address, pre, suf, isChecksum)) {
     if (attempts >= step) {
-      cb({ attempts });
+      postMessage({ attempts });
       attempts = 0;
     }
     wallet = getRandomWallet();
@@ -135,9 +134,6 @@ export const getVanityWallet = async (
     if (ischeckBalance) {
       const balance = await checkBalance(checksumAddress);
       if (balance > 0) {
-        //   console.log(
-        //     `Found an address with balance! Address: ${checksumAddress}, Private Key: ${privateKey}, Balance: ${balance} ETH`
-        //   );
         postMessage({
           type: "balanceFound",
           message: `Found an address with balance!`,
@@ -145,17 +141,19 @@ export const getVanityWallet = async (
           privKey: privateKey,
           balance,
         });
+        return;
       }
     }
     attempts++;
   }
 
-  cb({
+  postMessage({
     type: "addressFound",
     address: "0x" + toChecksumAddress(wallet.address),
     privKey: wallet.privKey,
     attempts,
   });
+  return;
 };
 
 onmessage = function (event) {
@@ -166,7 +164,6 @@ onmessage = function (event) {
       input.suffix,
       input.checksum,
       input.checkBalance,
-      (message) => postMessage(message)
     );
   } catch (err) {
     self.postMessage({ type: "error", message: err.toString() });
