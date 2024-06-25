@@ -10,7 +10,7 @@ const computeDifficulty = (
   prefix: string,
   suffix: string,
   isChecksum: boolean
-) => {
+): number => {
   const pattern = prefix + suffix;
   const ret = Math.pow(16, pattern.length);
   return isChecksum
@@ -18,12 +18,11 @@ const computeDifficulty = (
     : ret;
 };
 
-const computeProbability = (difficulty: number, attempts: number) => {
-  //这个是几何分布中至少成功一次的概率计算方法
+const computeProbability = (difficulty: number, attempts: number): number => {
   return 1 - Math.pow(1 - 1 / difficulty, attempts);
 };
 
-const formatNum = (num: number) => {
+const formatNum = (num: number): string => {
   return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 };
 
@@ -64,7 +63,7 @@ const Statistics = ({
 
   const inputError = !isValidHex(prefix) || !isValidHex(suffix);
   const difficulty = inputError
-    ? "N/A"
+    ? NaN
     : computeDifficulty(prefix, suffix, checksum);
   const probability50 = inputError
     ? 0
@@ -98,7 +97,9 @@ const Statistics = ({
     >
       <Typography variant="body1">
         Difficulty:{" "}
-        <span className="output">{formatNum(Number(difficulty))}</span>
+        <span className="output">
+          {isNaN(difficulty) ? "N/A" : formatNum(Number(difficulty))}
+        </span>
       </Typography>
       <Typography variant="body1">
         Generated:{" "}
