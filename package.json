@@ -15,7 +15,7 @@
     "blockies": "^0.0.2",
     "humanize-duration": "^3.32.1",
     "keccak": "^3.0.4",
-    "next": "14.2.4",
+    "next": "14.2.10",
     "randombytes": "^2.1.0",
     "react": "^18",
     "react-dom": "^18",
