@@ -12,6 +12,7 @@
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
     "@mui/material": "^5.15.20",
+    "@next/third-parties": "^15.2.0",
     "blockies": "^0.0.2",
     "humanize-duration": "^3.32.1",
     "keccak": "^3.0.4",
