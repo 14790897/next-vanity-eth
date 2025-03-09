@@ -126,7 +126,7 @@ export const getVanityWallet = async (
   const pre = isChecksum ? prefix : prefix.toLowerCase();
   const suf = isChecksum ? suffix : suffix.toLowerCase();
 
-  while (!isValidVanityAddress(wallet.address, pre, suf, isChecksum)) {
+  while (isValidVanityAddress(wallet.address, pre, suf, isChecksum)) {
     if (attempts >= step) {
       postMessage({ attempts });
       attempts = 0;
